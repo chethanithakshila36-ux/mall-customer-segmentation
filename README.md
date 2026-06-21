@@ -2,7 +2,7 @@
 
 An interactive web application that segments mall customers into distinct groups using unsupervised machine learning (clustering) techniques. Built to help businesses design targeted marketing strategies and improve membership card conversion rates.
 
-🔗 **Live App:** [[Add your Streamlit Cloud link here]](https://mall-customer-segmentation-wfv2gxjajkvuemyck5qfmp.streamlit.app/)
+🔗 **Live App:** https://mall-customer-segmentation-wfv2gxjajkvuemyck5qfmp.streamlit.app/
 
 ---
 
