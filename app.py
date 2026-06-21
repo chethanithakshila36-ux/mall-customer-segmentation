@@ -11,7 +11,7 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 import plotly.express as px
 
 # ---------------- PAGE SETUP ----------------
-st.set_page_config(page_title="Mall Customer Segmentation", layout="wide")
+st.set_page_config(page_title="Shopping Mall Customer Segmentation", layout="wide")
 st.title("Mall Customer Segmentation")
 st.write("Group customers into similar types using clustering techniques (K-Means, Hierarchical, DBSCAN)")
 
