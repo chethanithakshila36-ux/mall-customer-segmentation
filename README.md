@@ -46,7 +46,7 @@ The dataset contains 200 mall customer records with the following attributes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/mall-customer-segmentation.git
+git clone https://github.com/chethanithakshila36-ux/mall-customer-segmentation.git
 cd mall-customer-segmentation
 
 # Install dependencies
