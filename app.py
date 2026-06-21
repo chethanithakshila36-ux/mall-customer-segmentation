@@ -75,12 +75,12 @@ with tab1:
         km = KMeans(n_clusters=i, random_state=42, n_init=10)
         km.fit(X1_scaled)
         inertia.append(km.inertia_)
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(8, 6))
     ax.plot(K_range, inertia, marker='o', color='blue')
-    ax.set_title('Elbow Method - Optimal Number of Clusters')
+    ax.set_title('Elbow Method - Optimal Number of Clusters', fontsize=14)
     ax.set_xlabel('Number of Clusters (K)')
     ax.set_ylabel('Inertia (WCSS)')
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     st.subheader("Silhouette Score by K")
     sil_scores = []
@@ -88,12 +88,12 @@ with tab1:
         km = KMeans(n_clusters=i, random_state=42, n_init=10)
         labels = km.fit_predict(X1_scaled)
         sil_scores.append(silhouette_score(X1_scaled, labels))
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(8, 6))
     ax.plot(range(2, 11), sil_scores, marker='s', color='green')
-    ax.set_title('Silhouette Score by Number of Clusters')
+    ax.set_title('Silhouette Score by Number of Clusters', fontsize=14)
     ax.set_xlabel('Number of Clusters (K)')
     ax.set_ylabel('Silhouette Score')
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     best_k = list(range(2, 11))[sil_scores.index(max(sil_scores))]
     st.success(f"Best K according to Silhouette Score: {best_k}")
@@ -107,7 +107,7 @@ with tab2:
     km_score = silhouette_score(X1_scaled, df['KMeans_Cluster'])
     st.write(f"Silhouette Score: {km_score:.4f}")
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 8))
     for i in range(k):
         subset = df[df['KMeans_Cluster'] == i]
         ax.scatter(subset['Annual Income (k$)'], subset['Spending Score (1-100)'],
@@ -118,26 +118,26 @@ with tab2:
     ax.set_xlabel('Annual Income (k$)')
     ax.set_ylabel('Spending Score (1-100)')
     ax.legend()
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     st.subheader("Cluster Distribution")
     col1, col2 = st.columns(2)
     with col1:
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(8, 6))
         cluster_counts = df['KMeans_Cluster'].value_counts().sort_index()
         ax.pie(cluster_counts, labels=[f'Cluster {i}' for i in cluster_counts.index],
                autopct='%1.1f%%', colors=colors[:k], startangle=140, shadow=True)
         ax.set_title('Customer Distribution by Cluster')
-        st.pyplot(fig)
+        st.pyplot(fig, use_container_width=True)
     with col2:
         gender_cluster = df.groupby(['KMeans_Cluster', 'Gender']).size().unstack(fill_value=0)
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(8, 6))
         gender_cluster.plot(kind='bar', color=['salmon', 'steelblue'], edgecolor='black', ax=ax)
         ax.set_title('Gender Distribution Across Clusters')
         ax.set_xlabel('Cluster')
         ax.set_ylabel('Count')
         plt.xticks(rotation=0)
-        st.pyplot(fig)
+        st.pyplot(fig, use_container_width=True)
 
     st.subheader("Cluster Profile Summary")
     cluster_summary = df.groupby('KMeans_Cluster').agg(
@@ -149,7 +149,7 @@ with tab2:
     ).round(2)
     st.dataframe(cluster_summary)
 
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
     cluster_summary['Avg_Age'].plot(kind='bar', ax=axes[0], color=colors[:k], edgecolor='black')
     axes[0].set_title('Average Age per Cluster')
     cluster_summary['Avg_Income'].plot(kind='bar', ax=axes[1], color=colors[:k], edgecolor='black')
@@ -157,13 +157,13 @@ with tab2:
     cluster_summary['Avg_Spending'].plot(kind='bar', ax=axes[2], color=colors[:k], edgecolor='black')
     axes[2].set_title('Average Spending per Cluster')
     plt.tight_layout()
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     st.subheader("Correlation Heatmap")
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(8, 6))
     corr = df[['Age', 'Annual Income (k$)', 'Spending Score (1-100)', 'KMeans_Cluster']].corr()
     sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', square=True, ax=ax)
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     st.subheader("Predict Cluster for a New Customer")
     col1, col2 = st.columns(2)
@@ -179,19 +179,19 @@ with tab2:
 # ================= TAB 3: HIERARCHICAL =================
 with tab3:
     st.subheader("Hierarchical Clustering (Dendrogram)")
-    fig, ax = plt.subplots(figsize=(12, 5))
+    fig, ax = plt.subplots(figsize=(16, 7))
     linked = linkage(X1_scaled, method='ward')
     dendrogram(linked, truncate_mode='lastp', p=20, leaf_rotation=90, leaf_font_size=10,
                show_contracted=True, ax=ax)
     ax.set_title('Hierarchical Clustering Dendrogram (Ward Linkage)')
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     hc = AgglomerativeClustering(n_clusters=k, linkage='ward')
     df['HC_Cluster'] = hc.fit_predict(X1_scaled)
     hc_score = silhouette_score(X1_scaled, df['HC_Cluster'])
     st.write(f"Silhouette Score: {hc_score:.4f}")
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 8))
     for i in range(k):
         subset = df[df['HC_Cluster'] == i]
         ax.scatter(subset['Annual Income (k$)'], subset['Spending Score (1-100)'],
@@ -200,7 +200,7 @@ with tab3:
     ax.set_xlabel('Annual Income (k$)')
     ax.set_ylabel('Spending Score (1-100)')
     ax.legend()
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
 # ================= TAB 4: DBSCAN =================
 with tab4:
@@ -209,12 +209,12 @@ with tab4:
     nbrs = NearestNeighbors(n_neighbors=5).fit(X1_scaled)
     distances, _ = nbrs.kneighbors(X1_scaled)
     distances = np.sort(distances[:, 4])
-    fig, ax = plt.subplots(figsize=(8, 4))
+    fig, ax = plt.subplots(figsize=(10, 5))
     ax.plot(distances, color='purple')
     ax.set_title('K-Distance Graph (for choosing epsilon)')
     ax.set_xlabel('Data Points (sorted)')
     ax.set_ylabel('5th Nearest Neighbor Distance')
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     eps = st.slider("DBSCAN epsilon (eps)", min_value=0.1, max_value=2.0, value=0.5, step=0.1)
     min_samples = st.slider("Minimum samples", min_value=2, max_value=15, value=5)
@@ -233,7 +233,7 @@ with tab4:
         db_score = None
         st.warning("Not enough clusters to calculate Silhouette Score. Try changing eps.")
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 8))
     unique_labels = sorted(df['DBSCAN_Cluster'].unique())
     db_colors = plt.cm.tab10(np.linspace(0, 1, len(unique_labels)))
     for label, color in zip(unique_labels, db_colors):
@@ -246,7 +246,7 @@ with tab4:
     ax.set_xlabel('Annual Income (k$)')
     ax.set_ylabel('Spending Score (1-100)')
     ax.legend()
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     if n_noise > 0:
         st.subheader("Outlier Characteristics")
@@ -273,13 +273,13 @@ with tab5:
     models = ['K-Means', 'Hierarchical (Ward)', 'DBSCAN']
     scores = [km_score, hc_score, db_score_c]
 
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(10, 6))
     ax.bar(models, scores, color=['blue', 'green', 'purple'], alpha=0.6, edgecolor='black')
     ax.set_title('Model Comparison: Silhouette Scores')
     ax.set_ylabel('Silhouette Score')
     for i, v in enumerate(scores):
         ax.text(i, v + 0.02, f"{v:.4f}", ha='center', fontweight='bold')
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=True)
 
     best_model = models[scores.index(max(scores))]
     st.success(f"Best performing model: {best_model} (Silhouette Score: {max(scores):.4f})")
